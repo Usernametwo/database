@@ -19,7 +19,7 @@ select MIN(hire_date), MAX(hire_date)
 from employees
 ```
 
-MAX和MIN可用于任何类型，其他的只能用于数值类型
+MAX和MIN可用于任何类型，其他的只能用于`数值类型`
 
 ```sql
 select count(*) from
