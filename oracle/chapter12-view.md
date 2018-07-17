@@ -1,6 +1,8 @@
 # 数据库对象-视图
 
 ```sql
+select * from all_views
+
 create view empvu80
 as select employee_id ,last_name, salary
 from employees

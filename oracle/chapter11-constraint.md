@@ -11,6 +11,8 @@ Oracle数据库使用约束来阻止对数据库表中数据的不合法增删�
 5. CHECK : 自定义约束
 
 ```sql
+select * from all_constraints
+
 create table A(
     employee_id number(6),
     first_name varchar(20)

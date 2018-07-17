@@ -7,7 +7,7 @@ ORACLE数据库通过事务来控制数据的一致性，当用户进程或者�
 
 当下列事件发生时，会隐式的执行Commit动作
 
-1. 数据定义语句被执行的时候，比如新建一张create table ...
+1. 数据定义语句被执行的时候，比如新建一张create table ... 等DDL语句
 2. 数据控制语句被执行的时候，比如赋权: grant ...
 3. 正常退出 plsql
 
@@ -22,6 +22,33 @@ ORACLE数据库通过事务来控制数据的一致性，当用户进程或者�
 3. 在数据已经被更改，并且被Commit后，被更改记录自动解锁，其他用户可以进行更改
 4. 在数据已经被更改，并且被Commit后，其他Session用户再次访问这些数据看到的是改变之后的数据
 5. RollBack前后的数据状态同上
+
+```sql
+-- DDL,commit auto
+create table tbl (name varchar2(10));
+--DML
+insert into tbl values('gb');
+rollback;
+select * from tbl;
+
+insert into tbl values('gb');
+commit;
+rollback;
+select * from tbl;
+```
+
+COMMIT : 将数据的变化永久保存
+ROLLBACK : 将变化之前的数据还原回去
+
+一旦COMMIT就不能ROLLBACK回去了
+
+SQL语言分为五大类：
+
+1. DDL : Create, Alter, Drop等，隐式Commit
+2. DQL : Select不存在提交问题
+3. DML : Insert, Update, Delete需要显示Commit
+4. DTL : Commit, Rollback事务提交与回滚语句
+5. DCL : Grant, Revoke授予权限与回收权限语句
 
 ***
 

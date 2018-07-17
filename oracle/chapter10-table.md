@@ -17,6 +17,8 @@
 13. INTERVAL DAY TO SECOND
 
 ```sql
+select * from all_tables
+
 create table time_example
 (order_date1 timestamp,
 order_date2 timestamp with time zone,

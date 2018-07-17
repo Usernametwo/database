@@ -19,6 +19,10 @@ drop sequence dept_deptid_seq
 序列
 
 ```sql
+select *
+from user_indexes
+where table_owner = 'STUDENT1'
+
 create index emp_last_name_index
 on employees(last_name)
 
