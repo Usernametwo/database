@@ -6,6 +6,7 @@ Oracle中的锁的主要作用是：防止并发事务对相同的资源进行�
 当然也可以显式加锁，比如 : select ... from tableA where ... For UPDATE NoWait
 
 ```sql
+--未验证
 create table test_table
 (pk1 number,
 field1 varchar(200));
@@ -38,3 +39,5 @@ order by id1, request;
 ```
 
 由于程序问题导致Insert 相同主键会导致死锁的可能
+
+解锁

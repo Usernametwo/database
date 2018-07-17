@@ -92,3 +92,82 @@ group by department_id
 ```
 
 分组函数的嵌套使用
+
+```sql
+select department_id, manager_id, count(*), sum(salary) as sum_salary
+from employees
+group by department_id, manager_id
+order by department_id, manager_id
+
+select department_id, manager_id, count(*), sum(salary) as sum_salary
+from employees
+group by rollup(department_id, manager_id)
+order by department_id, manager_id
+
+select department_id, manager_id, employee_id, count(*), sum(salary) as sum_salary
+from employees
+group by employee_id, rollup(department_id, manager_id)
+order by department_id, manager_id
+```
+
+ROLLUP : 除了正常的分组结果外，rollup还会多返回两个分组,group by rollup(A, B)的结果实际上是group by A,B + group by A + 没有group by 的结果; group by rollup(A, B), C 的结果实际上是group by A,B,C + group by A,C + group by C 的结果
+
+```sql
+select department_id, manager_id, count(*), sum(salary) as sum_salary
+from employees
+group by department_id, manager_id
+order by department_id, manager_id
+
+select department_id, manager_id, count(*), sum(salary) as sum_salary
+from employees
+group by cube(department_id, manager_id)
+order by department_id, manager_id
+
+select department_id, manager_id, employee_id, count(*), sum(salary) as sum_salary
+from employees
+group by employee_id, cube(department_id, manager_id)
+order by department_id, manager_id
+```
+
+CUBE : 除了正常的分组结果外，cube还会多返回三个分组,group by cube(A, B)的结果实际上是group by A,B + group by A + group by B + 没有group by 的结果; group by rollup(A, B), C 的结果实际上是group by A,B,C + group by A,C + group by B,C + group by C 的结果
+
+```sql
+select department_id, manager_id, count(*), sum(salary) as sum_salary,
+grouping(department_id) as F1,
+grouping(manager_id) as F2
+from employees
+group by rollup(department_id, manager_id)
+order by department_id, manager_id
+
+select department_id, manager_id, count(*), sum(salary) as sum_salary,
+grouping(department_id) as F1,
+grouping(manager_id) as F2
+from employees
+group by cube(department_id, manager_id)
+order by department_id, manager_id
+
+select department_id, manager_id, count(*), sum(salary) as sum_salary,
+grouping(department_id) as F1,
+grouping(manager_id) as F2
+from employees
+group by cube(department_id, manager_id)
+-- can not use F1 or F2
+having grouping(department_id) = 1 or grouping(manager_id) = 1
+order by department_id, manager_id
+```
+
+Grouping : 如果是 grouping by A 出来的结果, 那么 grouping(B) 就是 1，其他同理(可以用来区分rollup和cube多出来的行)
+
+```sql
+select department_id, manager_id, count(*), sum(salary) as sum_salary,
+grouping_id(department_id, manager_id) as grouping_id
+from employees
+group by cube(department_id, manager_id)
+order by department_id, manager_id
+```
+
+GROUPING_ID : grouping_id(A, B) 的值为 F_A + F_B，如果是 group by A 出来的结果就是1，如果是没有 group by 出来的结果集结果为 2
+
+```
+
+```
