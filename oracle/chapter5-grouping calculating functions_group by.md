@@ -110,7 +110,7 @@ group by employee_id, rollup(department_id, manager_id)
 order by department_id, manager_id
 ```
 
-ROLLUP : 除了正常的分组结果外，rollup还会多返回两个分组,group by rollup(A, B)的结果实际上是group by A,B + group by A + 没有group by 的结果; group by rollup(A, B), C 的结果实际上是group by A,B,C + group by A,C + group by C 的结果
+ROLLUP : 除了正常的分组结果外，rollup还会多返回两个分组,group by rollup(A, B)的结果实际上是group by A,B union group by A union 没有group by 的结果; group by rollup(A, B), C 的结果实际上是group by A,B,C union group by A,C union group by C 的结果；group by rollup(A, B), C 还可以写成 group by rollup((A, B), C)
 
 ```sql
 select department_id, manager_id, count(*), sum(salary) as sum_salary
@@ -129,7 +129,7 @@ group by employee_id, cube(department_id, manager_id)
 order by department_id, manager_id
 ```
 
-CUBE : 除了正常的分组结果外，cube还会多返回三个分组,group by cube(A, B)的结果实际上是group by A,B + group by A + group by B + 没有group by 的结果; group by rollup(A, B), C 的结果实际上是group by A,B,C + group by A,C + group by B,C + group by C 的结果
+CUBE : 除了正常的分组结果外，cube还会多返回三个分组,group by cube(A, B)的结果实际上是group by A,B union group by A union group by B union 没有group by 的结果; group by cube(A, B), C 的结果实际上是group by A,B,C union group by A,C union group by B,C union group by C 的结果；group by cube(A, B), C 还可以写成 group by cube((A, B), C)
 
 ```sql
 select department_id, manager_id, count(*), sum(salary) as sum_salary,
@@ -168,6 +168,40 @@ order by department_id, manager_id
 
 GROUPING_ID : grouping_id(A, B) 的值为 F_A + F_B，如果是 group by A 出来的结果就是1，如果是没有 group by 出来的结果集结果为 2
 
+```sql
+select department_id, manager_id, employee_id, count(*), sum(salary) as sum_salary,
+grouping_id(department_id, manager_id) as grouping_id
+from employees
+group by grouping sets ((department_id, manager_id),(employee_id))
+order by department_id, manager_id
 ```
 
+GROUPING SETS：指定 group by 哪一列， group by grouping sets((A,B),(C))的结果为group by A,B union all group by C
+
+可以使用grouping sets来代替union all
+
+```sql
+select department_id, count(*), sum(salary) as sum_salary,
+grouping_id(department_id) as grouping_id,
+group_id() as group_id
+from employees
+group by grouping sets ((department_id), (department_id))
+order by department_id
+
+(select department_id, count(*), sum(salary) as sum_salary,
+grouping_id(department_id) as grouping_id,
+group_id() as group_id
+from employees
+group by grouping sets ((department_id))
+)
+union all
+(select department_id, count(*), sum(salary) as sum_salary,
+grouping_id(department_id) as grouping_id,
+group_id() as group_id
+from employees
+group by grouping sets ((department_id)))
 ```
+
+GROUP_ID : 重复结果出现的次数
+
+可以使用grouping sets ... where group_id() = 0 来代替union
