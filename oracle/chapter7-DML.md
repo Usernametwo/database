@@ -26,6 +26,28 @@ from employees
 where department_id = 50 with check option)
 values (99998, 'Taylor', 'JMSITH', to_date('07-06-1999', 'dd-mm-yyyy'),
 'ST_CLERK', 5000, 50)
+
+--一个来源插入多张表
+insert all
+into sal_history values(empid, hiredate, sal)
+into mgr_history values(empid, mgr, sal)
+select employee_id empid,  hire_date hiredate,
+       salary sal, manager_id mgr
+from employees
+where employee_id > 200
+
+--自带break
+insert first
+ when sal > 25000 then
+   into special_sal values(deptid, sal)
+ when hiredate like ('%00%') then
+   into hiredate_history_00 values(deptid, hiredate)
+ else
+   into hiredate_history values(deptid, hiredate)
+ select department_id deptid, sum(salary) sal,
+        max(hire_date) hiredate
+ from employees
+ group by department_id
 ```
 
 INSERT语句：
@@ -33,7 +55,7 @@ INSERT语句：
 1. 写出表名和列名：在列中，对于不允许为NULL的列，必须写出来，对于允许为NULL的列，可以不写出来；在value中，对于列中未写出来的列，默认赋NULL值
 2. 仅写出表名：在value中必须对应写出每个列的值，即使允许为NULL的列，也要在value中写NULL
 3. 从另一个表中copy一行：在这种方式下无需使用values关键字
-4. 使用子查询作为插入目标 ：with check option可以检查要插入的内容是否符合目标子查询的where条件
+4. 使用子查询作为插入目标 ：where ... with check option 可以检查要插入的内容是否符合目标子查询的where条件
 
 ```sql
 update employees set department_id = 70

@@ -23,19 +23,28 @@ job_id, length(last_name),
 instr(last_name, 'a') "Contains a?"
 from employees
 where substr(job_id, 4) = 'REP'
+
+select length('中国') from dual
+select lengthb('中国') from dual
+
+select substr('上海汉德', 2, 2) from dual
+select substrb('上海汉德', 2, 2) from dual
+select substrb('上海汉德', 3, 2) from dual
 ```
 
 字符串操作函数 :
 
 1. CONCAT():字符串连接
-2. SUBSTR():字符串截取
-3. LENGTH()
+2. SUBSTR():字符串截取，按照字符个数来取值
+3. LENGTH():字符个数
 4. INSTR('HelloWorld', 'W'):6
 5. LPAD(24000, 10, '*'):*****24000
 6. RPAD(24000, 10, '*'):24000*****
 7. TRIM(' HelloWorld'):HelloWorld
 
     TRIM('Hello World'):Hello World
+8. LENGTHB():字节数
+9. SUBSTRB():按照字节来取值
 
 ```sql
 select round(45.923, 2), round(45.923, 0), round(45.923, -1)
