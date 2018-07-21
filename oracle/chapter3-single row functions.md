@@ -45,6 +45,9 @@ select substrb('上海汉德', 3, 2) from dual
     TRIM('Hello World'):Hello World
 8. LENGTHB():字节数
 9. SUBSTRB():按照字节来取值
+10. REGEXP_LIKE
+11. REGEXP_INSTR
+12. ...
 
 ```sql
 select round(45.923, 2), round(45.923, 0), round(45.923, -1)
@@ -134,7 +137,7 @@ from employees
 
 其他常用函数:
 
-1. NVL(expr1, expr2):if expr1 is null return expr2
+1. NVL(expr1, expr2):if expr1 is null return expr2 else return expr1
 2. NVL2(expr1, expr2, expr3):if expr1 is null return expr3 else return expr2
 3. NULLIF(expr1, expr2):if expr1 = expr2 return null else return expr1
 4. COALESCE(expr1, expr2, ..., exprn):for expr in exprs : if expr is not null return expr

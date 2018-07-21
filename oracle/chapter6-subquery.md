@@ -143,3 +143,70 @@ order by department_name
 ```
 
 使用 WITH 子句：可以适当提高性能
+
+```sql
+create table tableA
+(column1 number(6), column2 varchar2(12));
+create table tableB
+(column1 number(6), column3 varchar2(12))
+
+insert into tableA values(1, 'a');
+insert into tableA values(2, 'b');
+insert into tableA values(3, 'c');
+insert into tableA values(4, null);
+
+insert into tableB values(1,'a');
+insert into tableB values(2,'b');
+insert into tableB values(3,null);
+insert into tableB values(5,'c');
+
+--等值连接
+select *
+from tableA, tableB
+where tableA.column1 = tableB.column1
+
+select *
+from tableA
+where exists (select *
+              from tableB
+              where tableA.column1 = tableB.column1)
+
+--左（右）外连接
+select *
+from tableA, tableB
+where tableA.column1 = tableB.column1(+)
+
+select *
+from tableA
+where exists (select *
+              from tableB
+              where tableA.column1 = tableB.column1)
+or tableA.column1 not in(select column1 from tableB)
+
+--group by
+select tableA.column1
+from tableA
+group by tableA.column1
+having count(*) = 1
+
+select column1
+from tableA A
+where exists (
+              select *
+              from tableA
+              where A.column1 = column1
+              having count(column1) = 1
+              )
+
+--对于有空值的子查询
+select *
+from tableA
+where exists(
+              select *
+              from tableB
+              where tableA.column2 = tableB.column3
+              or(tableA.column2 is null and tableB.column3 is null)
+              )
+```
+
+子查询在某些情况下可以对 join 和group by 操作进行替换
