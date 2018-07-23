@@ -209,4 +209,4 @@ where exists(
               )
 ```
 
-子查询在某些情况下可以对 join 和group by 操作进行替换
+子查询在某些情况下可以对 join 和 group by 操作进行替换, 当然效率肯定会有差别
