@@ -10,6 +10,8 @@ CREATE OR REPLACE PACKAGE comm_package IS
     g_comm NUMBER := 10;
     --declare public procedure or function
     PROCEDURE reset_comm(p_comm IN NUMBER);
+    --FUNCTION DECLARATION
+    --FUNCTION new_rental(title_id IN NUMBER) RETURN DATE;
 END comm_package;
 
 --program window -> package

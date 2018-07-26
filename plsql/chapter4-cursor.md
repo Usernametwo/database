@@ -13,7 +13,6 @@ begin
     :rows_deleted := (SQL % rowcount || ' rows deleted.');
 end;
 
---
 declare
     rows_deleted varchar2(30);
     v_employee_id employees.employee_id % type := 176;
