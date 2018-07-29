@@ -1,6 +1,6 @@
 # plsql中的游标
 
-游标是一个私有的SQL工作区域，Oracle有两种游标，分别为显示游标和隐式游标
+游标是一个私有的SQL内存工作区，游标的作用是用于临时在内存中存储数据库中提取的数据块，否则频繁的读取磁盘势必会效率低下，Oracle有两种游标，分别为显示游标和隐式游标
 
 ```sql
 -- Command Window
@@ -24,7 +24,7 @@ begin
 end;
 ```
 
-隐式游标：
+隐式游标：当plsql在处理 DML 操作的时候都会隐式的产生一个游标
 
 1. SQL % ROWCOUNT : 受最近的SQL语句影响的行数
 2. SQL % FOUND: 受最近的SQL语句是否未影响了一行以上的数据
@@ -159,3 +159,53 @@ END;
 ```
 
 批量读取：bulk collect to ** limit number : 可以适当提高效率
+
+```sql
+declare
+  --定义强类型的游标变量
+  type ref_person_cur1 is ref cursor return cux_cursor_test % rowtype;
+  l_ref_person_cur1 ref_person_cur1;
+  
+  --弱类型的游标变量
+  type ref_person_cur2 is ref cursor;
+  l_ref_person_cur2 ref_person_cur2;
+  
+  --定义变量接受游标返回结果
+  l_row_rec cux_cursor_test % rowtype;
+  type person_rec_type is record(person_id number, person_name varchar2(140), age number);
+  type person_tbl_type is table of person_rec_type index by binary_integer;
+  l_person_tbl person_tbl_type;
+  l_dync_sql varchar(100) := null;
+  
+begin
+  dbms_output.put_line('强类型游标变量');
+  open l_ref_person_cur1 for select * from cux_cursor_test;
+  loop
+    --获取强类型游标变量的结果必须用指定的返回类型接受
+    fetch l_ref_person_cur1 into l_row_rec;
+    exit when l_ref_person_cur1 % notfound;
+    dbms_output.put_line('Person name : ' || l_row_rec.person_name);
+  end loop;
+  close l_ref_person_cur1;
+  
+  
+  dbms_output.put_line('弱类型游标变量');
+  l_dync_sql := 'select * from cux_cursor_test where 1 = 1 and person_name = :1';
+  --弱类型游标变量绑定动态SQL
+  open l_ref_person_cur2 for l_dync_sql using 'gb';
+  --一次接收多行结果集
+  fetch l_ref_person_cur2 bulk collect into l_person_tbl;
+  for i in 1..l_person_tbl.count loop
+    dbms_output.put_line('person name : ' || l_person_tbl(i).person_name);
+  end loop;
+  close l_ref_person_cur2;
+  
+end;
+```
+
+自定义游标变量：
+
+1. 定义 REF CURSOR 类型 : TYPE ref_type_name IS REF CURSOR[RETURN return type] (分为强类型和弱类型
+2. 定义游标变量 ：variable ref_type_name
+3. 定义变量接收返回结果
+4. 打开游标接收数据，关闭游标

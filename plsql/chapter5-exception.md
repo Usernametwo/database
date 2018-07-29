@@ -84,6 +84,6 @@ EXCEPTION
         raise_application_error(-20201, 'Manager is not a valid employee.');
 ```
 
-RAISE_APPLICATION_ERROR() 函数 : 无需预定义错误
+RAISE_APPLICATION_ERROR() 函数 : 无需预定义错误，SQLCODE必须在-20000到-20999之间
 
 如果在循环中出现异常，接下来的循环都不会执行，如果还想继续执行下去需要写一个匿名块或者procedure 或者函数来捕获这个异常，之后将控制权交给调用者则可以继续循环。

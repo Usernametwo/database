@@ -190,3 +190,39 @@ END;
 ```
 
 调用者权限：AUTHID CURRENT_USER
+
+```sql
+-- procedure 值传递
+CREATE OR REPLACE PROCEDURE copy_parameter(p_number IN OUT NUMBER) IS
+    test_exception EXCEPTION;
+BEGIN
+    p_number := 10000;
+    RAISE test_exception;
+END copy_parameter;
+--procedure 引用传递
+CREATE OR REPLACE PROCEDURE nocopy_parameter(p_number IN OUT NOCOPY NUMBER) IS
+    test_exception EXCEPTION;
+BEGIN
+    p_number := 9999;
+    RAISE test_exception;
+END nocopy_parameter;
+
+--sql window
+declare
+  l_number number := 20000;
+begin
+  copy_parameter(p_number => l_number);
+  exception
+    when others then
+      dbms_output.put_line('copy_parameter: ' || l_number);
+      begin
+        l_number := 20000;
+        nocopy_parameter(p_number => l_number);
+        exception
+          when others then
+            dbms_output.put_line('nocopy_parameter: ' || l_number);
+      end;
+end;
+```
+
+值传递和引用传递(nocopy)

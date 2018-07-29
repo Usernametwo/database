@@ -27,7 +27,32 @@ begin
 end;
 ```
 
-select into语句
+SELECT INTO 语句
+
+```sql
+declare
+  l_person_name varchar2(140);
+  l_age number;
+  
+  type person_rec_type is record(
+  person_name varchar(140),
+  age number);
+  type person_rec_tbl is table of person_rec_type index by binary_integer;
+  person_tbl person_rec_tbl;
+begin
+  insert into cux_cursor_test values(103, 'juzhihua', 25)
+  returning person_name, age into l_person_name, l_age;
+  dbms_output.put_line('person_name : ' || l_person_name);
+  
+  delete cux_cursor_test
+  returning person_name, age bulk collect into person_tbl;
+  for i in 1..person_tbl.count loop
+    dbms_output.put_line('person_name : ' || person_tbl(i).person_name);
+  end loop;
+end;
+```
+
+RETURNING INTO 语句 ：可以返回 DML 语句中影响到的行中的所有列的值
 
 ```sql
 declare
