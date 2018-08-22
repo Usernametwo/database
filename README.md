@@ -1,5 +1,7 @@
 # database learning notes
 
+## oracle sql
+
 [第一章 SELECT语句](./oracle/chapter1-select.md)
 
 [第二章 条件限制和排序](./oracle/chapter2-where_order_by.md)
@@ -33,3 +35,27 @@
 [第十六章 递归查询](./oracle/chapter16-recursive_query.md)
 
 [第十七章 分析函数](./oracle/chapter17-analysis_function.md)
+
+## plsql
+
+[第一章 plsql变量](./plsql/chapter1-variable.md)
+
+[第二章 plsql中的sql语句](./plsql/chapter2-sql.md)
+
+[第三章 plsql中的复杂自定义数据类型](./plsql/chapter3-selfdefine_datatype.md)
+
+[第四章 plsql中的游标](./plsql/chapter4-cursor.md)
+
+[第五章 plsql中的异常处理](./plsql/chapter5-exception.md)
+
+[第六章 plsql中的存储过程和函数](./plsql/chapter6-procedure_function.md)
+
+[第七章 plsql中的包](./plsql/chapter7-package.md)
+
+[第八章 内置plsql工具包](./plsql/chapter8-Toolkit.md)
+
+[第九章 plsql中的大对象操作](./plsql/chapter9-LOB.md)
+
+[第十章 数据库触发器](./plsql/chapter10-trigger.md)
+
+[第十一章 plsql中的动态sql](./plsql/chapter11-dynamic_sql.md)
